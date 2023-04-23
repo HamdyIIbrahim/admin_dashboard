@@ -1,3 +1,4 @@
+import NavBar from "@/components/navbar/nav";
 import { useSession, signIn, signOut } from "next-auth/react";
 
 export default function Home() {
@@ -13,8 +14,12 @@ export default function Home() {
       </div>
     );
   }
-  return <>
-      Signed in as {session.user.email} <br/>
-      <button onClick={() => signOut()}>Sign out</button>
-    </>
+  return (
+    <div className="bg-slate-900 flex min-h-screen">
+      <NavBar />
+      <div className="bg-slate-200 flex flex-grow my-2 mr-2 rounded-lg p-4">
+        <span>hello from right hand side</span>
+      </div>
+    </div>
+  );
 }

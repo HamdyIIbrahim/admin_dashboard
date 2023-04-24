@@ -1,8 +1,11 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 function NavBar() {
   const inactivebtn = "flex gap-1 p-1";
   const activebtn = inactivebtn + " bg-slate-200  text-sky-900 rounded-l-lg py-2";
+  const router = useRouter();
+  const { route } =router;
   return (
     <aside className="text-white bg-slate-900 p-4 pr-0">
       <Link href="/" className="flex gap-1 mb-4 mr-4">
@@ -23,7 +26,7 @@ function NavBar() {
         <span className="">Shop Wick</span>
       </Link>
       <nav className="flex flex-col gap-2">
-        <Link href={"/"} className={activebtn}>
+        <Link href={"/"} className={route === "/" ?activebtn:inactivebtn}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -40,7 +43,7 @@ function NavBar() {
           </svg>
           Dashboard
         </Link>
-        <Link href={"/products"} className={inactivebtn}>
+        <Link href={"/products"} className={route.includes("/products")?activebtn:inactivebtn}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -57,7 +60,7 @@ function NavBar() {
           </svg>
           Products
         </Link>
-        <Link href={"/orders"} className={inactivebtn}>
+        <Link href={"/orders"} className={route.includes("/orders") ?activebtn:inactivebtn}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -74,7 +77,7 @@ function NavBar() {
           </svg>
           Orders
         </Link>
-        <Link href={"/settings"} className={inactivebtn}>
+        <Link href={"/settings"} className={route.includes("/settings") ?activebtn:inactivebtn}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

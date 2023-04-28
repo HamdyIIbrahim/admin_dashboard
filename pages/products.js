@@ -4,7 +4,7 @@ import Link from "next/link";
 function Products(){
     return(
         <Layout>
-            <Link href='/products/new'>Add new product</Link>
+            <Link href='/products/new' className="btn-primary">Add new product</Link>
         </Layout>
     )
 }

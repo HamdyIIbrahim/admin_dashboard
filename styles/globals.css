@@ -1,6 +1,7 @@
 *:focus {
     outline: none;
-  }
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -22,4 +23,16 @@ label{
 }
 .btn-primary{
     @apply bg-blue-900 text-white px-4 py-1 rounded-md text-center
+}
+table.basic{
+  @apply w-full;
+}
+table.basic thead tr td{
+  @apply bg-blue-200;
+}
+table.basic tr td {
+  @apply border-2 border-blue-300 p-1 ;
+}
+table.basic a{
+  @apply bg-blue-900 text-white text-sm py-1 px-2 rounded-md inline-flex  gap-1;
 }

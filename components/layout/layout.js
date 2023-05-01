@@ -18,7 +18,7 @@ export default function Layout({children}) {
     <div className="bg-slate-900 flex min-h-screen">
       <NavBar />
       <div className="bg-slate-200 flex flex-grow my-2 mr-2 rounded-lg p-4">
-        <span>{children}</span>
+        <span className="w-full">{children}</span>
       </div>
     </div>
   );

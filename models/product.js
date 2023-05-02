@@ -1,6 +1,6 @@
-// import {model,Schema,models} from 'mongoose';
+// import mongoose from 'mongoose';
 
-// const ProductSchema= new Schema({
+// const ItemSchema= new mongoose.Schema({
 //     title:{
 //         type:String,
 //         required:true
@@ -10,5 +10,7 @@
 //         type:Number,
 //         required:true
 //     }
-// })
-// export const Product = models.Product || model('Product',ProductSchema);
+// });
+
+// const Item = mongoose.model('Item' ,ItemSchema);
+// export default Item;

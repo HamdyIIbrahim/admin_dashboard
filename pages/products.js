@@ -1,5 +1,7 @@
 import Layout from "@/components/layout/layout";
+import { Item } from "@/models/product";
 import axios from "axios";
+
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -11,6 +13,9 @@ function Products() {
       .then((result) => {
         setProducts(result.data);
       });
+    // Item.find().then((data)=>{
+    //     setProducts(data)
+    // })
   }, []);
   return (
     <Layout>

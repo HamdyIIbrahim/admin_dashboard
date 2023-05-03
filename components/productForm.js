@@ -2,18 +2,20 @@ import axios from "axios";
 import useRouter from "next/router";
 import { useState } from "react";
 import * as FileStack from "filestack-js";
+import Image from "next/image";
 function ProductForm({
   _id,
   title: productTitle,
   description: productDescription,
   price: productPrice,
-  images:productImages,
+  images,
 }) {
   const router = useRouter;
   const [title, setTitle] = useState(productTitle || "");
-  const [images, setImages] = useState(productImages || [])
+  const [photos, setPhotos] = useState(images || []);
   const [description, setDescription] = useState(productDescription || "");
   const [price, setPrice] = useState(productPrice || "");
+  const [isUploading, setIsUploading] = useState(false);
   function GoTo() {
     router.push("/products");
   }
@@ -26,7 +28,7 @@ function ProductForm({
           title: title,
           description: description,
           price: price,
-          images:images,
+          images: photos,
           id: _id,
         })
         .then((response) => console.log(response.data), GoTo())
@@ -38,7 +40,7 @@ function ProductForm({
           title: title,
           description: description,
           price: price,
-          images:images,
+          images: photos,
         })
         .then((response) => console.log(response.data), GoTo())
         .catch((error) => console.error(error));
@@ -46,6 +48,7 @@ function ProductForm({
   }
   async function UploadImages(ev) {
     ev.preventDefault();
+    setIsUploading(true);
     const client = FileStack.init("Apuhmeux0SxyydZYZPpKnz");
     client
       .picker({
@@ -54,26 +57,14 @@ function ProductForm({
         onUploadDone: async (res) => {
           const URL = res.filesUploaded[0].url;
           console.log(URL);
-          setImages([...images,URL])
+          setPhotos(photos.concat(URL));
+          console.log(photos);
         },
       })
       .open();
-
-    // console.log(ev.target.files[0]);
-    // const files = ev.target?.files;
-    // if(files?.length > 0){
-    //     const data = new FormData();
-    //     for(let i=0; i<files.length;i++){
-    //         console.log(files[0]);
-    //         data.append('file',files[0])
-    //     }
-    //     await fetch('/api/upload',{
-    //         method:'POST',
-    //         body:data,
-    //     });
-
-    // }
+      setIsUploading(false);
   }
+
   return (
     <form onSubmit={createProduct}>
       <label>Product Name :</label>
@@ -84,7 +75,13 @@ function ProductForm({
         onChange={(e) => setTitle(e.target.value)}
       />
       <label>photos</label>
-      <div className="mb-2">
+      <div className="mb-2 flex flex-wrap gap-2 items-center">
+        {!!photos?.length &&
+          photos.map((photo) => (
+            <div key={photo} className="h-24">
+              <img src={photo} className="rounded-lg" alt="" />
+            </div>
+          ))}
         <label className="w-24 h-24 border-2 my-2 border-gray-50 flex flex-col justify-center items-center gap-1 text-center rounded-lg ">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -104,9 +101,7 @@ function ProductForm({
           {/* <input type="file" onChange={(ev)=>UploadImages(ev)} className="hidden" /> */}
           <button onClick={(ev) => UploadImages(ev)}>upload</button>
         </label>
-        {!images?.length && <div>no images for this product</div>}
       </div>
-
       <label>Description :</label>
       <textarea
         placeholder="description"

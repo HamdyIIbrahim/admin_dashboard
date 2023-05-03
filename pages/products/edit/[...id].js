@@ -11,6 +11,7 @@ export default function EditProduct(){
     const id = ID[0];
     useEffect(()=>{
         axios.get(`https://admin-dashboard-backend-rnc4.onrender.com/products/${id}`).then((result)=>{
+            console.log(result.data);
             setProduct(result.data)
         })
     },[id])

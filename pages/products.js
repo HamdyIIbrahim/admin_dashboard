@@ -13,10 +13,8 @@ function Products() {
       .then((result) => {
         setProducts(result.data);
       });
-    // Item.find().then((data)=>{
-    //     setProducts(data)
-    // })
   }, []);
+  
   return (
     <Layout>
       <Link href="/products/new" className="btn-primary">

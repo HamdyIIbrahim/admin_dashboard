@@ -3,6 +3,8 @@ import useRouter from "next/router";
 import { useState } from "react";
 import * as FileStack from "filestack-js";
 import Image from "next/image";
+import Spinner from "./spinner";
+import { ReactSortable } from "react-sortablejs";
 function ProductForm({
   _id,
   title: productTitle,
@@ -15,7 +17,6 @@ function ProductForm({
   const [photos, setPhotos] = useState(images || []);
   const [description, setDescription] = useState(productDescription || "");
   const [price, setPrice] = useState(productPrice || "");
-  const [isUploading, setIsUploading] = useState(false);
   function GoTo() {
     router.push("/products");
   }
@@ -48,7 +49,7 @@ function ProductForm({
   }
   async function UploadImages(ev) {
     ev.preventDefault();
-    setIsUploading(true);
+    
     const client = FileStack.init("Apuhmeux0SxyydZYZPpKnz");
     client
       .picker({
@@ -62,7 +63,10 @@ function ProductForm({
         },
       })
       .open();
-      setIsUploading(false);
+      
+  }
+  function UpdatingImages(photos){
+    setPhotos(photos);
   }
 
   return (
@@ -76,12 +80,14 @@ function ProductForm({
       />
       <label>photos</label>
       <div className="mb-2 flex flex-wrap gap-2 items-center">
+        <ReactSortable className="flex flex-wrap gap-2" list={photos} setList={UpdatingImages}>
         {!!photos?.length &&
           photos.map((photo) => (
             <div key={photo} className="h-24">
               <img src={photo} className="rounded-lg" alt="" />
             </div>
           ))}
+        </ReactSortable>
         <label className="w-24 h-24 border-2 my-2 border-gray-50 flex flex-col justify-center items-center gap-1 text-center rounded-lg ">
           <svg
             xmlns="http://www.w3.org/2000/svg"

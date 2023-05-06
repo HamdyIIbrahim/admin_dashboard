@@ -8,27 +8,21 @@ export default function Categories() {
   const [parentCategory, setParentCategory] = useState("");
   useEffect(() => {
     getAllCategories();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   function getAllCategories() {
-    console.log('triggered')
     axios
       .get(
         "https://admin-dashboard-backend-rnc4.onrender.com/category/allcategories"
       )
       .then((result) => {
         setCategories(result.data);
-        console.log(categories);
       });
   }
-  async function saveCatrgories(ev) {
+  function saveCatrgories(ev) {
     ev.preventDefault();
-    await axios
-      .post("/api/categories", { name, parentCategory });
-        getAllCategories();
-        console.log({"😊😊😊":response.data});
-      
-
+    axios.post("/api/categories", { name, parentCategory }).then(() => {
+      getAllCategories();
+    });
     setName("");
   }
   return (
@@ -41,7 +35,9 @@ export default function Categories() {
           className="mb-0"
           placeholder="Category name"
           value={name}
-          onChange={(ev) => setName(ev.target.value)}
+          onChange={(ev) => {
+            setName(ev.target.value);
+          }}
         />
         <select
           className="mb-0"

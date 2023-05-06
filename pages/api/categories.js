@@ -2,15 +2,15 @@ import axios from "axios";
 
 export default function handle(req, res) {
   const { method } = req;
-  const data = JSON.parse(JSON.stringify(req.body));
+  const Data = JSON.parse(JSON.stringify(req.body));
   if (method === "POST") {
-    // const {name , parentCategory} =data;
+    // const {name , parentCategory} =req.body;
     // const newParentCategory= new ObjectId(parentCategory)
     axios
       .post(
-        "https://admin-dashboard-backend-rnc4.onrender.com/category/newcategory",data)
-      .then((result) => {
-        res.json(result);
+        "https://admin-dashboard-backend-rnc4.onrender.com/category/newcategory",Data)
+      .then(() => {
+        res.json("categoriy added successfully");
       })
       .catch((err) => {
         console.log(err);

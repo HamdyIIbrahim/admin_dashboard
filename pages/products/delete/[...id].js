@@ -7,7 +7,7 @@ export default function DeleteProduct() {
   const [product, setProduct] = useState(null);
   const router = useRouter();
   const ID = router.query.id;
-  const id = ID[0];
+  const id = ID?ID[0]:null;
   useEffect(() => {
     axios
       .get(`https://admin-dashboard-backend-rnc4.onrender.com/products/${id}`)

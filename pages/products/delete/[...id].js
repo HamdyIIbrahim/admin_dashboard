@@ -13,7 +13,7 @@ export default function DeleteProduct() {
       .then((result) => {
         setProduct(result.data);
       });
-  }, [id]);
+  }, []);
   function GoBack() {
     router.push("/products");
   }

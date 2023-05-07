@@ -1,9 +1,7 @@
 import axios from "axios";
 import useRouter from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as FileStack from "filestack-js";
-import Image from "next/image";
-import Spinner from "./spinner";
 import { ReactSortable } from "react-sortablejs";
 function ProductForm({
   _id,
@@ -11,12 +9,15 @@ function ProductForm({
   description: productDescription,
   price: productPrice,
   images,
+  parentCategory:categoryName
 }) {
   const router = useRouter;
   const [title, setTitle] = useState(productTitle || "");
   const [photos, setPhotos] = useState(images || []);
+  const [categories, setCategories] = useState([]);
   const [description, setDescription] = useState(productDescription || "");
   const [price, setPrice] = useState(productPrice || "");
+  const [parentCategory, setParentCategory] = useState(categoryName||"");
   function GoTo() {
     router.push("/products");
   }
@@ -31,6 +32,7 @@ function ProductForm({
           price: price,
           images: photos,
           id: _id,
+          parentCategory
         })
         .then((response) => console.log(response.data), GoTo())
         .catch((error) => console.error(error));
@@ -42,6 +44,7 @@ function ProductForm({
           description: description,
           price: price,
           images: photos,
+          parentCategory
         })
         .then((response) => console.log(response.data), GoTo())
         .catch((error) => console.error(error));
@@ -68,7 +71,15 @@ function ProductForm({
   function UpdatingImages(photos){
     setPhotos(photos);
   }
-
+  useEffect(()=>{
+    axios
+      .get(
+        "https://admin-dashboard-backend-rnc4.onrender.com/category/allcategories"
+      )
+      .then((result) => {
+        setCategories(result.data);
+      });
+  },[])
   return (
     <form onSubmit={createProduct}>
       <label>Product Name :</label>
@@ -78,6 +89,23 @@ function ProductForm({
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
+      <label>Category name :</label>
+      <select
+          className="my-1"
+          value={parentCategory}
+          onChange={(ev) => {
+            setParentCategory(ev.target.value);
+          }}
+        >
+          <option value="">Uncategorized</option>
+          {categories?.map((category) => {
+            return (
+              <option value={category._id} key={category._id}>
+                {category.name}
+              </option>
+            );
+          })}
+        </select>
       <label>photos</label>
       <div className="mb-2 flex flex-wrap gap-2 items-center">
         <ReactSortable className="flex flex-wrap gap-2" list={photos} setList={UpdatingImages}>

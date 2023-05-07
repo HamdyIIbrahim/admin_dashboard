@@ -7,8 +7,7 @@ export default function handle(req, res) {
     // const {name , parentCategory} =req.body;
     // const newParentCategory= new ObjectId(parentCategory)
     axios
-      .post(
-        "https://admin-dashboard-backend-rnc4.onrender.com/category/newcategory",Data)
+      .post(`https://admin-dashboard-backend-rnc4.onrender.com/newcategory`, Data)
       .then(() => {
         res.json("categoriy added successfully");
       })
@@ -16,16 +15,10 @@ export default function handle(req, res) {
         console.log(err);
       });
   }
-  // if (method === "GET") {
-  //   axios
-  //     .get(
-  //       "https://admin-dashboard-backend-rnc4.onrender.com/category/allcategories"
-  //     )
-  //     .then((result) => {
-  //       res.json(JSON.parse(JSON.stringify(result.data)));
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }
+  if(method === "DELETE"){
+    const {_id}=req.query;
+    axios.delete(`${process.env.DOMAIN_URL}/deletecategory/${_id}`).then(()=>{
+      res.json('OK');
+    })
+  }
 }

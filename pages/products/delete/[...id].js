@@ -13,7 +13,7 @@ export default function DeleteProduct() {
       .then((result) => {
         setProduct(result.data);
       });
-  }, []);
+  }, [ID]);
   function GoBack() {
     router.push("/products");
   }
@@ -21,7 +21,7 @@ export default function DeleteProduct() {
     e.preventDefault();
     axios
       .post(`/api/delete/`, {
-        Id: id,
+        Id: ID[0],
       })
       .then((response) => console.log((response.statusText==="OK"?"product deleted successfully":"can't delete product") ), GoBack())
       .catch((error) => console.error(error));

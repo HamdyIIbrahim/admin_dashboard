@@ -20,9 +20,7 @@ export default function DeleteProduct() {
   function DeleteProduct(e) {
     e.preventDefault();
     axios
-      .post(`/api/delete/`, {
-        Id: ID[0],
-      })
+      .delete(`/api/products/delete?_id=`+_id)
       .then((response) => console.log((response.statusText==="OK"?"product deleted successfully":"can't delete product") ), GoBack())
       .catch((error) => console.error(error));
   }

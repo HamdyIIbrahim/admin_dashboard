@@ -26,12 +26,11 @@ function ProductForm({
     if (_id) {
       //update product
       await axios
-        .put("/api/products", {
+        .put("/api/products/edit?_id="+_id, {
           title: title,
           description: description,
           price: price,
           images: photos,
-          id: _id,
           parentCategory
         })
         .then((response) => console.log(response.data), GoTo())

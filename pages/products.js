@@ -9,9 +9,10 @@ function Products() {
   const [products, setProducts] = useState([]);
   useEffect(() => {
     axios
-      .get("https://admin-dashboard-backend-rnc4.onrender.com/products/")
+      .get("/api/products")
       .then((result) => {
         setProducts(result.data);
+        console.log(result.data);
       });
   }, []);
   
@@ -28,7 +29,7 @@ function Products() {
           </tr>
         </thead>
         <tbody>
-          {products.map((product) => {
+          {products?.length && products.map((product) => {
             return (
               <tr key={product._id}>
                 <td>{product.title}</td>

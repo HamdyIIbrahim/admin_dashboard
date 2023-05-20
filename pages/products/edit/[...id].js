@@ -7,8 +7,8 @@ import { useEffect, useState } from "react";
 export default function EditProduct(){
     const [product,setProduct]=useState(null);
     const router = useRouter();
-    const {_id} = router.query;
-    const id = ID[0];
+    const id = router.query.id[0];
+    console.log(router.query.id[0]);
     useEffect(()=>{
         axios.get(`https://admin-dashboard-backend-rnc4.onrender.com/products/${id}`).then((result)=>{
             console.log(result.data);

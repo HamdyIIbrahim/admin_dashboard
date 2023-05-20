@@ -6,12 +6,9 @@ const CategoriesSchema= new Schema({
         required:true
     },
     parentCategory:{
-        type: String
-    }
-    // parentCategory:{
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref:'Categories'
-    // },
+        type:Schema.Types.ObjectId,
+        ref:'Categories'
+    },
 })
 
 

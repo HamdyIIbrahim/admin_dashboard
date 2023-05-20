@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 export default function Categories() {
   const [name, setName] = useState("");
   const [categories, setCategories] = useState([]);
-  const [parentCategory, setParentCategory] = useState("");
+  const [parentCategory, setParentCategory] = useState();
 
   useEffect(() => {
     getAllCategories();
@@ -94,7 +94,7 @@ export default function Categories() {
             return (
               <tr key={category._id}>
                 <td>{category.name}</td>
-                <td></td>
+                <td>{category.parentCategory}</td>
                 <td className="flex gap-1">
                   <button className="flex justify-center items-center gap-2 btn-primary">
                     <svg

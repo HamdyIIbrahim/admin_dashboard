@@ -7,76 +7,126 @@ export default function Categories() {
   const [name, setName] = useState("");
   const [categories, setCategories] = useState([]);
   const [parentCategory, setParentCategory] = useState();
+  const [properties, setProperties] = useState([]);
 
   useEffect(() => {
     getAllCategories();
   }, []);
   function getAllCategories() {
-    axios
-      .get(
-        "https://admin-dashboard-backend-rnc4.onrender.com/category/allcategories"
-      )
-      .then((result) => {
-        setCategories(result.data);
-      });
+    axios.get("/api/categories").then((result) => {
+      setCategories(result.data);
+    });
   }
   function saveCatrgories(ev) {
     ev.preventDefault();
-    axios.post("/api/categories", { name, parentCategory}).then(() => {
-      console.log("hhhhhhhhhhh");
+    axios.post("/api/categories", { name, parentCategory }).then(() => {
       getAllCategories();
     });
     setName("");
   }
   function deleteCategory(category) {
-
     Swal.fire({
       title: "Are you sure?",
       text: `Do you want to delete ${category.name}`,
       showCancelButton: true,
       cancelButtonText: "Cancel",
-      cancelButtonColor:'#991B1B',
+      cancelButtonColor: "#991B1B",
       confirmButtonText: "Yes, Delete!",
-      confirmButtonColor:'#1E3A8A'
+      confirmButtonColor: "#1E3A8A",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const { _id } = category;
+        await axios.delete("/api/categories?_id=" + _id);
+        getAllCategories();
+      }
+    });
+  }
+  function addProperty() {
+    setProperties((prev) => {
+      return [...prev, { name: "", value: "" }];
+    });
+  }
+  function handlePropertyNameChange(index,property,newName){
+    setProperties(prev=>{
+      const properties =[...prev];
+      properties[index].name=newName;
+      return properties;
     })
-      .then(async (result) => {
-        if(result.isConfirmed){
-          const {_id}=category;
-          await axios.delete('/api/categories?_id='+_id);
-          getAllCategories();
-        }
+  }
+  function handlePropertyValuesChange(index,property,newValues){
+    setProperties(prev=>{
+      const properties =[...prev];
+      properties[index].value=newValues;
+      return properties;
+    })
+  }
+  function removeProperty(indexToRemove){
+    setProperties(prev=>{
+      return [...prev].filter((p,pIndex)=>{
+        return pIndex !== indexToRemove;
       });
+    })
   }
   return (
     <Layout>
       <h1>Categories</h1>
       <label> New categories name</label>
-      <form className="flex gap-1" onSubmit={saveCatrgories}>
-        <input
-          type="text"
-          className="mb-0"
-          placeholder="Category name"
-          value={name}
-          onChange={(ev) => {
-            setName(ev.target.value);
-          }}
-        />
-        <select
-          className="mb-0"
-          value={parentCategory}
-          onChange={(ev) => {
-            setParentCategory(ev.target.value);
-          }}
-        >
-          <option value="">no parent category</option>
-          {categories?.map((category) => {
-            return (
-              <option value={category._id} key={category._id}>
-                {category.name}
-              </option>
-            );
-          })}
-        </select>
+      <form onSubmit={saveCatrgories}>
+        <div className="felx gap-1">
+          <input
+            type="text"
+            placeholder="Category name"
+            value={name}
+            onChange={(ev) => {
+              setName(ev.target.value);
+            }}
+          />
+          <select
+            value={parentCategory}
+            onChange={(ev) => {
+              setParentCategory(ev.target.value);
+            }}
+          >
+            <option value="">no parent category</option>
+            {categories?.map((category) => {
+              return (
+                <option value={category._id} key={category._id}>
+                  {category.name}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+        <div className="mb-2">
+          <label className="block">Properties</label>
+          <button
+            type="button"
+            onClick={addProperty}
+            className="btn-secondary text-sm mb-2"
+          >
+            add new property
+          </button>
+          {properties.length > 0 &&
+            properties.map((property,index) => (
+              <div className="flex gap-1 mb-2" key={index}>
+                <input
+                  type="text"
+                  value={property.name}
+                  className="mb-0"
+                  onChange={(ev)=>handlePropertyNameChange(index,property,ev.target.value)}
+                  placeholder="property name (example: color)"
+                />
+                <input
+                  type="text"
+                  value={property.values}
+                  className="mb-0"
+                  onChange={(ev)=>handlePropertyValuesChange(index,property,ev.target.value)}
+                  placeholder="value, comma separated"
+                />
+                <button onClick={()=>removeProperty(index)} className="btn-red">Remove</button>
+              </div>
+            ))}
+        </div>
         <button type="submit" className="btn-primary py-1">
           Save
         </button>
@@ -94,7 +144,7 @@ export default function Categories() {
             return (
               <tr key={category._id}>
                 <td>{category.name}</td>
-                <td>{category.parentCategory}</td>
+                <td>{category.parentCategory.name}</td>
                 <td className="flex gap-1">
                   <button className="flex justify-center items-center gap-2 btn-primary">
                     <svg
@@ -114,7 +164,7 @@ export default function Categories() {
                     edit
                   </button>
                   <button
-                    onClick={(ev)=>deleteCategory(category)}
+                    onClick={(ev) => deleteCategory(category)}
                     className="flex justify-center items-center gap-2 btn-red"
                   >
                     <svg

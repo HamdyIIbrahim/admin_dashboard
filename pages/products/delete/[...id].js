@@ -6,21 +6,24 @@ import { useEffect, useState } from "react";
 export default function DeleteProduct() {
   const [product, setProduct] = useState(null);
   const router = useRouter();
-  const ID = router.query.id;
+  const {id} = router.query;
   useEffect(() => {
-    axios
-      .get(`https://admin-dashboard-backend-rnc4.onrender.com/products/${ID[0]}`)
+    if(id){
+      axios
+      .get(`/api/products?id=`+id)
       .then((result) => {
+        console.log(result.data);
         setProduct(result.data);
       });
-  }, [ID]);
+    }
+  }, [id]);
   function GoBack() {
     router.push("/products");
   }
   function DeleteProduct(e) {
     e.preventDefault();
     axios
-      .delete(`/api/products/delete?_id=`+_id)
+      .delete(`/api/products?id=`+id)
       .then((response) => console.log((response.statusText==="OK"?"product deleted successfully":"can't delete product") ), GoBack())
       .catch((error) => console.error(error));
   }

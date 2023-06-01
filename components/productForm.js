@@ -3,13 +3,14 @@ import useRouter from "next/router";
 import { useEffect, useState } from "react";
 import * as FileStack from "filestack-js";
 import { ReactSortable } from "react-sortablejs";
+import Image from "next/image";
 function ProductForm({
   _id,
   title: productTitle,
   description: productDescription,
   price: productPrice,
   images,
-  parentCategory:categoryName
+  parentCategory: categoryName,
 }) {
   const router = useRouter;
   const [title, setTitle] = useState(productTitle || "");
@@ -17,7 +18,7 @@ function ProductForm({
   const [categories, setCategories] = useState([]);
   const [description, setDescription] = useState(productDescription || "");
   const [price, setPrice] = useState(productPrice || "");
-  const [parentCategory, setParentCategory] = useState(categoryName||"");
+  const [parentCategory, setParentCategory] = useState(categoryName || "");
   function GoTo() {
     router.push("/products");
   }
@@ -26,12 +27,12 @@ function ProductForm({
     if (_id) {
       //update product
       await axios
-        .put("/api/products/edit?_id="+_id, {
+        .put(`/api/products?id=`+_id, {
           title: title,
           description: description,
           price: price,
           images: photos,
-          parentCategory
+          parentCategory,
         })
         .then((response) => console.log(response.data), GoTo())
         .catch((error) => console.error(error));
@@ -43,7 +44,7 @@ function ProductForm({
           description: description,
           price: price,
           images: photos,
-          parentCategory
+          parentCategory,
         })
         .then((response) => console.log(response.data), GoTo())
         .catch((error) => console.error(error));
@@ -51,7 +52,7 @@ function ProductForm({
   }
   async function UploadImages(ev) {
     ev.preventDefault();
-    
+
     const client = FileStack.init("Apuhmeux0SxyydZYZPpKnz");
     client
       .picker({
@@ -65,20 +66,15 @@ function ProductForm({
         },
       })
       .open();
-      
   }
-  function UpdatingImages(photos){
+  function UpdatingImages(photos) {
     setPhotos(photos);
   }
-  useEffect(()=>{
-    axios
-      .get(
-        "https://admin-dashboard-backend-rnc4.onrender.com/category/allcategories"
-      )
-      .then((result) => {
-        setCategories(result.data);
-      });
-  },[])
+  useEffect(() => {
+    axios.get("/api/categories").then((result) => {
+      setCategories(result.data);
+    });
+  }, []);
   return (
     <form onSubmit={createProduct}>
       <label>Product Name :</label>
@@ -90,30 +86,35 @@ function ProductForm({
       />
       <label>Category name :</label>
       <select
-          className="my-1"
-          value={parentCategory}
-          onChange={(ev) => {
-            setParentCategory(ev.target.value);
-          }}
-        >
-          <option value="">Uncategorized</option>
-          {categories?.map((category) => {
-            return (
-              <option value={category._id} key={category._id}>
-                {category.name}
-              </option>
-            );
-          })}
-        </select>
+        className="my-1"
+        value={parentCategory}
+        onChange={(ev) => {
+          setParentCategory(ev.target.value);
+          console.log(ev.target.value);
+        }}
+      >
+        <option value="">Uncategorized</option>
+        {categories?.map((category) => {
+          return (
+            <option value={category._id} key={category._id}>
+              {category.name}
+            </option>
+          );
+        })}
+      </select>
       <label>photos</label>
       <div className="mb-2 flex flex-wrap gap-2 items-center">
-        <ReactSortable className="flex flex-wrap gap-2" list={photos} setList={UpdatingImages}>
-        {!!photos?.length &&
-          photos.map((photo) => (
-            <div key={photo} className="h-24">
-              <img src={photo} className="rounded-lg" alt="" />
-            </div>
-          ))}
+        <ReactSortable
+          className="flex flex-wrap gap-2"
+          list={photos}
+          setList={UpdatingImages}
+        >
+          {!!photos?.length &&
+            photos.map((photo) => (
+              <div key={photo} className="h-24">
+                <img src={photo} className="rounded-lg" alt="" />
+              </div>
+            ))}
         </ReactSortable>
         <label className="w-24 h-24 border-2 my-2 border-gray-50 flex flex-col justify-center items-center gap-1 text-center rounded-lg ">
           <svg

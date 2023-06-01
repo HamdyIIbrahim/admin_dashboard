@@ -5,8 +5,8 @@ import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-function Products() {
-  const [products, setProducts] = useState([]);
+function Products({ productss }) {
+  const [products, setProducts] = useState(productss);
   useEffect(() => {
     axios
       .get("/api/products")

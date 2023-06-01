@@ -12,7 +12,8 @@ const ProductSchema= new Schema({
     },
     images:[{type:String}],
     parentCategory:{
-        type:String
+        type:Schema.Types.ObjectId,
+        ref:'Categories'
     }
 })
 
